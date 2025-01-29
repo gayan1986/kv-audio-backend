@@ -30,14 +30,15 @@ export function loginUser(req,res){
            if(user == null){
                 res.status(404).json({error : "user name incorect"})
            }else{
-                if(bcrypt.compareSync(data.password, user.password)){
+                if(bcrypt.compareSync(data.password, user.password)){  //user pasword == data.pasword ?
 
                     const token = jwt.sign({
                         fristName : user.fristName,
                         lastName : user.lastName,
                         email : user.email,
-                        role : user.role
-                    },"kv-secret-89!")
+                        role : user.role,
+                        profilePicture : user.profilePicture
+                    },"process.env.JWT_SECRET")
 
                     res.status(200).json({massage : "user login successfull", token : token})
                 } else{

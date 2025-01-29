@@ -5,6 +5,7 @@ import userRouter from "./routes/userRouter.js";
 import productRouter from "./routes/productRouter.js";
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
+import reviewRouter from "./routes/reviewRouter.js";
 
 dotenv.config();
 
@@ -16,7 +17,7 @@ app.use((req,res,next)=>{
 
     if(token!=null){
         token = token.replace("Bearer ","")
-        jwt.verify(token,"kv-secret-89!",(err,decorded)=>{
+        jwt.verify(token,"process.env.JWT_SECRET",(err,decorded)=>{
             if(!err){
                 req.user = decorded;
             }
@@ -37,6 +38,7 @@ connection.once("open",()=>{
 
 app.use("/api/users",userRouter);
 app.use("/api/products",productRouter);
+app.use("/api/reviews",reviewRouter);
 
 app.listen(3000,()=>{
     console.log("sever is running on port 3000")
@@ -53,3 +55,11 @@ app.listen(3000,()=>{
 // }
 
 //"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmlzdE5hbWUiOiJnaWhhbiIsImxhc3ROYW1lIjoibWFpbiIsImVtYWlsIjoibWFoZXNoYUBnbWFpbC5jb20iLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3Mzc4NzU3NTd9.IBYbpwvIrJBCic3g6HKzDJvqJ0DWbXWpyKtPWr75eSQ"
+
+// "email": "johndoe@example.com",
+// "password": "mypassword123",
+
+//admin
+
+// "email": "joneAdmin@example.com",
+// "password": "1234",
