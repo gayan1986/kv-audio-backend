@@ -1,5 +1,5 @@
 import Product from "../Models/product.js";
-import { loginUser } from "./usercontroller.js";
+import { isItAdmin, loginUser } from "./usercontroller.js";
 
 export function addProduct(req,res){
     //console.log(req.user)
@@ -22,4 +22,63 @@ export function addProduct(req,res){
     }).catch(()=>{
         res.json({error : "product added failed"})
     })
+}
+
+export async function getProduct(req,res){
+
+    try{
+        if(isItAdmin(req)){
+            const products = await Product.find();
+            res.json(products);
+            return
+        }else{
+            const products = await Product.find({availability : "false"});
+            res.json(products);
+            return
+        }
+
+    }catch(e){
+        res.ststus(500).json({massege : "Failed to get product"})
+    }
+
+}
+
+export async function updateProduct(req,res) {
+
+    try{
+        if(isItAdmin(req)){
+            const key = req.params.key;
+            const data = req.body;
+
+            await Product.updateOne({key:key},data);
+            res.json({massege :" product update sucssefully"})
+
+        }else{
+            res.json({massege : "you are no authorized to profome this action"})
+        }
+
+    }catch(e){
+        res.ststus(500).json({massege : "fail to update product"})
+    }
+    
+}
+
+export async function deleteProduct(req,res){
+
+    try{
+        if(isItAdmin(req)){
+            const key = req.params.key;
+            
+            await Product.deleteOne({key:key})
+            res.json({massege : "delete successfully"})
+
+        }else{
+            res.json({massege : "you are no authorized to profome this action"})
+        }
+
+    }catch(e){
+        res.json({massege : "fail to detete product"})
+        return
+    }
+
 }
